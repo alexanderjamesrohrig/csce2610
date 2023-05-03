@@ -1,6 +1,3 @@
-	.data // DATA SECTION
-	//.equ NODE_SIZE, 10
-	.text
 	.global main
 	.arch armv8-a+fp+simd
 	.type main, %function
@@ -14,14 +11,15 @@ ListNode:
 	value: .hword 0 // 2 bytes
 	link: .quad 0 // 8 bytes
 	.equ NodeSize, .-ListNode
+.data
 // THE LIST
 Head: .quad 0
 // NODE MEMORY
-Nodes: .skip 100 * NodeSize // 0x00000000800012A2
+Nodes: .skip 100 * NodeSize
+FreePtr: .quad Nodes
 .equ OutputSize, 100
 Output: .skip OutputSize * 2
 .text
-FreePtr: .quad Nodes
 main:
 	// NODE:
 	// 0x 0000 0000 0000 0000 0000
@@ -35,11 +33,8 @@ main:
 	adr x2, Head // x2 = address of Head
 	adr x3, FreePtr // x3 = address of FreePtr
 	adr x1, Nodes // x1 = address of Nodes buffer
-	str x1, [x3] // FreePtr = x1
-	mov x0, 0x0000000000000000 // x0 = 0
-	str x0, [x2] // Head = 0
 
-	bl allocate
+	// bl allocate
 
 	mov x0, 0x1111
 	bl insert
